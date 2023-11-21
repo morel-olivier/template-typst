@@ -1,1 +1,3 @@
 *.pdf
+# do not ignore main pdf as it allow to easily show what the document look like.
+!main.pdf

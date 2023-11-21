@@ -55,8 +55,7 @@
 				[#company | #authorsList
 				#h(1fr)
 				#counter(page).display("1/1", both: true)]
-			}
-			else {
+			} else {
 				[#authorsList
 				#h(1fr)
 				#counter(page).display("1/1", both: true)]
