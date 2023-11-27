@@ -50,17 +50,38 @@
 				}
 			}
 		),
-		footer: [
-			#if company != none {
-				[#company | #authorsList
-				#h(1fr)
-				#counter(page).display("1/1", both: true)]
-			} else {
-				[#authorsList
-				#h(1fr)
-				#counter(page).display("1/1", both: true)]
-			}
-			],
+		footer: {
+			locate(loc =>{
+				grid(
+					columns: (50%, 50%),
+					rows: auto,
+					{
+						if calc.even(loc.page()) {
+							if company != none [
+								#company | #authorsList
+							] else[
+								#authorsList
+							]
+						 } else {
+							set align(left) 
+							counter(page).display("1/1", both: true)
+						 }
+					},
+					{
+						if not calc.even(loc.page()) {
+							if company != none [
+								#company | #authorsList
+							] else[
+								#authorsList
+							]
+						} else {
+							set align(right) 
+							counter(page).display("1/1", both: true)
+						}
+					},
+				)
+			})
+		},
 	)
 
 	set par(
