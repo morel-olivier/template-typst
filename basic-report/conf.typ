@@ -1,24 +1,105 @@
 #let conf(
 	fontSize: 12pt,
-	title: "Titre",
+	title: "Title",
 	company: none,
 	authors: (),
 	frontPagePicture: none,
+	language: "en",
+	region: none,
 	doc
 ) = {
 
-	let authorsList = []
-	if type(authors) == "array"{
-		for i in range(authors.len()) {
-			if i == 0 {
-				authorsList += [#authors.at(i)]
-			} else {
-				authorsList += [ & #authors.at(i)]
+/*******************************************************************************
+* Internal function
+*
+* Those functions are only for use by the template
+*******************************************************************************/
+
+let authorsList = []
+if type(authors) == "array"{
+	for i in range(authors.len()) {
+		if i == 0 {
+			authorsList += [#authors.at(i)]
+		} else {
+			authorsList += [ & #authors.at(i)]
+		}
+	}
+} else {
+	authorsList = [#authors]
+}
+
+// currently the heading displayed is the previous one. If the page begin with
+// a new heading then the header still display the last one. This due to the
+// fact that the header is generated before the display of the header
+let generateHeaders() = {
+	context {
+		let previousHeadings = query(selector(heading).before(here()))
+
+		smallcaps[*#title*]
+		h(1fr)
+		if previousHeadings.len() != 0 {
+			emph(previousHeadings.last().body)
+		}
+	}
+	/*locate(
+		loc => {
+			let elems = query(
+				selector(heading).before(loc,),
+				loc,
+			)
+			let emphTitle = smallcaps(title)
+			if elems != () {
+				let body = elems.last().body
+				emphTitle + h(1fr) + emph(body)
+			}
+			else{
+				emphTitle
 			}
 		}
-	} else {
-		authorsList = [#authors]
-	}
+	)*/
+	line(length: 100%)
+}
+
+let generateFooters() = {
+	line(length: 100%)
+	locate(loc =>{
+		grid(
+			columns: (50%, 50%),
+			rows: auto,
+			{
+				if calc.even(loc.page()) {
+					if company != none [
+						#company | #authorsList
+					] else[
+						#authorsList
+					]
+				 } else {
+					set align(left) 
+					counter(page).display("1/1", both: true)
+				 }
+			},
+			{
+				if not calc.even(loc.page()) {
+					if company != none [
+						#company | #authorsList
+					] else[
+						#authorsList
+					]
+				} else {
+					set align(right) 
+					counter(page).display("1/1", both: true)
+				}
+			},
+		)
+	})
+}
+
+
+/*******************************************************************************
+* Document settings
+*
+* This is where the actual configuration of the document is done.
+*******************************************************************************/
 
 	set document(
 		title: title,
@@ -34,54 +115,8 @@
 
 	set page(
 		paper: "a4",
-		header: locate(
-			loc => {
-				let elems = query(
-					selector(heading).before(loc,),
-					loc,
-				)
-				let emphTitle = smallcaps(title)
-				if elems != () {
-					let body = elems.last().body
-					emphTitle + h(1fr) + emph(body)
-				}
-				else{
-					emphTitle
-				}
-			}
-		),
-		footer: {
-			locate(loc =>{
-				grid(
-					columns: (50%, 50%),
-					rows: auto,
-					{
-						if calc.even(loc.page()) {
-							if company != none [
-								#company | #authorsList
-							] else[
-								#authorsList
-							]
-						 } else {
-							set align(left) 
-							counter(page).display("1/1", both: true)
-						 }
-					},
-					{
-						if not calc.even(loc.page()) {
-							if company != none [
-								#company | #authorsList
-							] else[
-								#authorsList
-							]
-						} else {
-							set align(right) 
-							counter(page).display("1/1", both: true)
-						}
-					},
-				)
-			})
-		},
+		header: generateHeaders(),
+		footer: generateFooters(),
 	)
 
 	set par(
