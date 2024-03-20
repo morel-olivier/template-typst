@@ -41,28 +41,29 @@ let generateHeaders() = {
 			emph(previousHeadings.last().body)
 		}
 	}
-	/*locate(
-		loc => {
-			let elems = query(
-				selector(heading).before(loc,),
-				loc,
-			)
-			let emphTitle = smallcaps(title)
-			if elems != () {
-				let body = elems.last().body
-				emphTitle + h(1fr) + emph(body)
-			}
-			else{
-				emphTitle
-			}
-		}
-	)*/
+
 	line(length: 100%)
 }
 
 let generateFooters() = {
 	line(length: 100%)
-	locate(loc =>{
+
+	context {
+		grid(
+			columns: (50%, 50%),
+			rows: auto,
+			{
+				[#counter(page).get().at(0)]
+			//	if counter(page).at(here()).even(){
+			//		[hello]
+			//	}
+			},
+			{
+				[hello]
+			}
+		)
+	}
+	/*locate(loc =>{
 		grid(
 			columns: (50%, 50%),
 			rows: auto,
@@ -91,7 +92,7 @@ let generateFooters() = {
 				}
 			},
 		)
-	})
+	})*/
 }
 
 
@@ -107,7 +108,7 @@ let generateFooters() = {
 		)
 
 	set text(
-		font: "FreeSans",
+		font: "Arial",
 		size: fontSize,
 		lang: "fr",
 		region: "CH",

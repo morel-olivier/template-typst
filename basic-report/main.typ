@@ -9,7 +9,7 @@
 	doc
 )
 
-
+ 
 = Introduction <intro>
 #lorem(100)
 
@@ -27,3 +27,8 @@
 
 = Conclusion
 #lorem(100)
+
+#context [
+		#let previousHeadings = query(selector(heading).before(here()))
+		[#previousHeadings]
+]
